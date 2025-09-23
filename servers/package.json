@@ -29,11 +29,13 @@
     "@nestjs/graphql": "^13.1.0",
     "@nestjs/jwt": "^11.0.0",
     "@nestjs/platform-express": "^11.0.1",
+    "@prisma/client": "^6.16.2",
     "@types/bcrypt": "^6.0.0",
     "bcrypt": "^6.0.0",
     "class-validator": "^0.14.2",
     "express": "^5.1.0",
     "graphql": "^16.11.0",
+    "prisma": "^6.16.2",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1"
   },
