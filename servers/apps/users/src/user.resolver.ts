@@ -1,5 +1,5 @@
-import { BadRequestException, Query } from '@nestjs/common';
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { BadRequestException } from '@nestjs/common';
+import { Args, Mutation, Resolver, Query } from '@nestjs/graphql';
 import { UsersService } from './users.service';
 import { RegisterResponse } from './types/user.types';
 import { RegisterDto } from './dto/user.dto';
