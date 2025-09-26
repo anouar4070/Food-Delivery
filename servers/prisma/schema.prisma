@@ -1,6 +1,6 @@
 generator client {
   provider = "prisma-client-js"
-  // supprime la ligne output pour utiliser le client par défaut
+  // delete the line of output to use the client by default
   // output = "../generated/prisma"
 }
 
