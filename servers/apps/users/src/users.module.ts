@@ -10,6 +10,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../../../prisma/Prisma.service';
 import { UsersResolver } from './user.resolver';
+import { EmailModule } from './email/email.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { UsersResolver } from './user.resolver';
         federation: 2,
       },
     }),
+    EmailModule,
   ],
   controllers: [UsersController],
   providers: [

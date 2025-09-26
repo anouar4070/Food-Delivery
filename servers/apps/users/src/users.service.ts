@@ -3,8 +3,14 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto, RegisterDto } from './dto/user.dto';
 import { PrismaService } from '../../../prisma/Prisma.service';
-
 import { Response } from 'express';
+
+interface UserData {
+  name: string;
+  email: string;
+  password: string;
+  phone_number: number;
+}
 
 @Injectable()
 export class UsersService {
@@ -39,16 +45,38 @@ export class UsersService {
       );
     }
 
-    const user = await this.prisma.user.create({
-      data: {
-        name,
-        email,
-        password,
-        phone_number,
-      },
-    });
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const user = {
+      name,
+      email,
+      password: hashedPassword,
+      phone_number,
+    };
+
+    const activationToken = await this.createActivationToken(user);
+    const activationCode = activationToken.activationCode;
+
+    console.log(activationCode);
 
     return { user, response };
+  }
+
+  // create activation token
+  async createActivationToken(user: UserData) {
+    const activationCode = Math.floor(1000 + Math.random() * 9000).toString();
+
+    const token = this.jwtService.sign(
+      {
+        user,
+        activationCode,
+      },
+      {
+        secret: this.configService.get<string>('ACTIVATION_SECRET'),
+        expiresIn: '5m',
+      },
+    );
+    return { token, activationCode };
   }
 
   // Login service
