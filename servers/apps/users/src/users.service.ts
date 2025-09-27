@@ -84,7 +84,7 @@ export class UsersService {
       },
       {
         secret: this.configService.get<string>('ACTIVATION_SECRET'),
-        expiresIn: '5m',
+        expiresIn: '15m',
       },
     );
     return { token, activationCode };
@@ -162,6 +162,15 @@ export class UsersService {
     hashedPassword: string,
   ): Promise<boolean> {
     return await bcrypt.compare(password, hashedPassword);
+  }
+
+  // get logged in user
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async getLoggedInUser(req: any) {
+    const user = req.user;
+    const refreshToken = req.refreshtoken;
+    const accessToken = req.accesstoken;
+    return { user, refreshToken, accessToken };
   }
 
   // get all users service

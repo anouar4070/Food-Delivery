@@ -7,7 +7,7 @@ import {
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { PrismaService } from 'prisma/Prisma.service';
+import { PrismaService } from '../../../../prisma/Prisma.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -71,7 +71,7 @@ export class AuthGuard implements CanActivate {
         { id: user.id },
         {
           secret: this.config.get<string>('ACCESS_TOKEN_SECRET'),
-          expiresIn: '5m',
+          expiresIn: '15m',
         },
       );
 
