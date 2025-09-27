@@ -164,7 +164,6 @@ export class UsersService {
     return await bcrypt.compare(password, hashedPassword);
   }
 
-
   // get all users service
   async getUsers() {
     return this.prisma.user.findMany({});
