@@ -36,6 +36,9 @@ export class User {
   @Field()
   role: string;
 
+  // @Field({ nullable: true })
+  // address?: string;
+
   @Field({ nullable: true })
   phone_number: number;
 
