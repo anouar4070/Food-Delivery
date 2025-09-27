@@ -6,6 +6,7 @@ import { PrismaService } from '../../../prisma/Prisma.service';
 import { Response } from 'express';
 import { EmailService } from './email/email.service';
 import * as bcrypt from 'bcrypt';
+import { TokenSender } from './utils/sendToken';
 
 interface UserData {
   name: string;
