@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { JwtService } from '@nestjs/jwt';
-import { LoginDto, RegisterDto } from './dto/user.dto';
+import { JwtService, JwtVerifyOptions } from '@nestjs/jwt';
+import { ActivationDto, LoginDto, RegisterDto } from './dto/user.dto';
 import { PrismaService } from '../../../prisma/Prisma.service';
 import { Response } from 'express';
 import { EmailService } from './email/email.service';
@@ -59,6 +59,7 @@ export class UsersService {
 
     const activationToken = await this.createActivationToken(user);
     const activationCode = activationToken.activationCode;
+    const activation_token = activationToken.token;
 
     await this.emailService.sendMail({
       email,
@@ -68,7 +69,7 @@ export class UsersService {
       activationCode,
     });
 
-    return { user, response };
+    return { activation_token, response };
   }
 
   // create activation token
@@ -86,6 +87,48 @@ export class UsersService {
       },
     );
     return { token, activationCode };
+  }
+
+  // activation user
+  async activateUser(activationDto: ActivationDto, response: Response) {
+    const { activationToken, activationCode } = activationDto;
+
+    // const newUser: { user: UserData; activationCode: string } =
+    //   this.jwtService.verify(activationToken, {
+    //     secret: this.configService.get<string>('ACTIVATION_SECRET'),
+    //   } as JwtVerifyOptions) as { user: UserData; activationCode: string };
+    const options: JwtVerifyOptions = {
+      secret: this.configService.get<string>('ACTIVATION_SECRET'),
+    };
+    const newUser: { user: UserData; activationCode: string } =
+      this.jwtService.verify(activationToken, options);
+
+    if (newUser.activationCode !== activationCode) {
+      throw new BadRequestException('Invalid activation code');
+    }
+
+    const { name, email, password, phone_number } = newUser.user;
+
+    const existUser = await this.prisma.user.findUnique({
+      where: {
+        email,
+      },
+    });
+
+    if (existUser) {
+      throw new BadRequestException('User already exist with this email!');
+    }
+
+    const user = await this.prisma.user.create({
+      data: {
+        name,
+        email,
+        password,
+        phone_number,
+      },
+    });
+
+    return { user, response };
   }
 
   // Login service
