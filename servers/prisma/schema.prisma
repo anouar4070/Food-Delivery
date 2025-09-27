@@ -1,6 +1,6 @@
 generator client {
   provider = "prisma-client-js"
-  // supprime la ligne output pour utiliser le client par défaut
+  // delete the line of output to use the client by default
   // output = "../generated/prisma"
 }
 
@@ -26,9 +26,9 @@ model User {
   id           String    @id @default(auto()) @map("_id") @db.ObjectId
   name         String
   email        String    @unique
-  // phone_number Float? @unique  ===> we can't use this line because sometime our phone number is null and then we can't compare it
+   phone_number Float? @unique // ===> we can't use this line because sometime our phone number is null and then we can't compare it
  // phone_number Float?
-  //address      String?
+  address      String?
   password     String
   avatar       Avatars?
  // reviews      Reviews[]
