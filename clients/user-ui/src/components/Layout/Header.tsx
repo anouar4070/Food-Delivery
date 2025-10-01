@@ -1,11 +1,17 @@
-"use client";
-
-import { Avatar } from "@heroui/react";
+import styles from "@/src/utils/style";
+import NavItems from "../NavItems";
+import ProfileDropDown from "../ProfileDropDown";
 
 const Header = () => {
-  return  <header>
-      <Avatar src="https://i.pravatar.cc/150?u=a042581f4e29026024d" />
-  </header>
+  return (
+     <header className="w-full bg-[#0A0713]">
+      <div className="w-[90%] m-auto h-[80px] flex items-center justify-between">
+        <h1 className={`${styles.logo}`}>AnouarDelivery</h1>
+        <NavItems />
+        <ProfileDropDown />
+      </div>
+    </header>
+  );
 };
 
 export default Header;
