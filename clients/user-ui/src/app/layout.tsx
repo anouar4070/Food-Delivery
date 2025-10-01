@@ -1,13 +1,30 @@
-"use client";
+import type { Metadata } from "next";
+import { Inter, Poppins } from "next/font/google";
+import "./globals.css";
+import { Providers } from "./providers/HeroUiProvider";
 
-import "../styles/tailwind.css";   // ou ./styles.css
-import { HeroUIProvider } from "@heroui/react";
 
-export default function RootLayout({ children }) {
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-Poppins",
+});
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+
+export const metadata: Metadata = {
+  title: "Anouar Food Delivery",
+  description: "Anouar Food Delivery website",
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
-      <body>
-        <HeroUIProvider>{children}</HeroUIProvider>
+      <body className={`${poppins.variable} ${inter.variable}`}>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
