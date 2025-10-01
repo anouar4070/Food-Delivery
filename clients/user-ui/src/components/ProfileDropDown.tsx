@@ -8,7 +8,7 @@ import {
 } from "@heroui/react";
 import { useEffect, useState } from "react";
 import { CgProfile } from "react-icons/cg";
-// import AuthScreen from "../screens/AuthScreen";
+import AuthScreen from "../screens/AuthScreen";
 // import useUser from "../hooks/useUser";
 // import toast from "react-hot-toast";
 // import Cookies from "js-cookie";
@@ -17,7 +17,7 @@ import { CgProfile } from "react-icons/cg";
 
 const ProfileDropDown = () => {
   const [signedIn, setsignedIn] = useState(false);
-  // const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false);
   // const { user, loading } = useUser();
   // const { data } = useSession();
 
@@ -84,7 +84,7 @@ const ProfileDropDown = () => {
           onClick={() => setOpen(!open)}
         />
       )}
-      {/* {open && <AuthScreen setOpen={setOpen} />} */}
+       {open && <AuthScreen setOpen={setOpen} />}
     </div>
   );
 };
