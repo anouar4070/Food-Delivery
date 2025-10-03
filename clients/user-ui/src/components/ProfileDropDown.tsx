@@ -54,14 +54,16 @@ const ProfileDropDown = () => {
             <Avatar
               as="button"
               className="transition-transform"
-              src={data?.user ? data.user.image : user.image}
+              src="https://avatars.githubusercontent.com/u/159817067?s=400&u=778e078cfa9c4066022ac84b5d13ff1cf07c3b1d&v=4"
+              // src={data?.user ? data.user.image : user.image}
             />
           </DropdownTrigger>
           <DropdownMenu aria-label="Profile Actions" variant="flat">
             <DropdownItem key="profile" className="h-14 gap-2">
               <p className="font-semibold">Signed in as</p>
               <p className="font-semibold">
-                {data?.user ? data.user.email : user.email}
+                {/* {data?.user ? data.user.email : user.email} */}
+                support@becodemy.com
               </p>
             </DropdownItem>
             <DropdownItem key="settings">My Profile</DropdownItem>
@@ -72,7 +74,7 @@ const ProfileDropDown = () => {
             <DropdownItem
               key="logout"
               color="danger"
-              onClick={() => logoutHandler()}
+              // onClick={() => logoutHandler()}
             >
               Log Out
             </DropdownItem>

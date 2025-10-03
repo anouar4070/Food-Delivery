@@ -25,9 +25,9 @@ const AuthScreen = ({ setOpen }: { setOpen: (e: boolean) => void }) => {
           <Login setActiveState={setActiveState} />
         )}
         {activeState === "Signup" && <Signup setActiveState={setActiveState} />}
-        {activeState === "Verification" && (
+        {/* {activeState === "Verification" && (
           <Verification setActiveState={setActiveState} />
-        )}
+        )} */}
         {/* {activeState === "Forgot-Password" && (
           <ForgotPassword setActiveState={setActiveState} />
         )} */}
