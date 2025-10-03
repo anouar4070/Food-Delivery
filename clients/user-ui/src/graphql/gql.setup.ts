@@ -1,10 +1,12 @@
-// import {
-//   ApolloClient,
-//   //ApolloLink,
-//   InMemoryCache,
-// } from "@apollo/client";
+import { ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
 
-// export const graphqlClient = new ApolloClient({
-//   uri: process.env.SERVER_URI,
-//   cache: new InMemoryCache(),
-// });
+console.log(process.env.NEXT_PUBLIC_SERVER_URI);
+
+const link = new HttpLink({
+  uri: process.env.NEXT_PUBLIC_SERVER_URI,
+});
+
+export const graphqlClient = new ApolloClient({
+  link, // 👈 required now
+  cache: new InMemoryCache(),
+});

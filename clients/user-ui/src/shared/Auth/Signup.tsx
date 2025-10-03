@@ -10,7 +10,8 @@ import {
 } from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
 import { useState } from "react";
-//import { useMutation } from "@apollo/client";
+import { useMutation } from '@apollo/client/react';
+
 //import { REGISTER_USER } from "@/src/graphql/actions/register.action";
 //import toast from "react-hot-toast";
 
@@ -30,7 +31,8 @@ const Signup = ({
 }: {
   setActiveState: (e: string) => void;
 }) => {
-  //const [registerUserMutation, { loading }] = useMutation(REGISTER_USER);
+  const [registerUserMutation, { loading, error, data }] =
+    useMutation(REGISTER_USER);
 
   const {
     register,

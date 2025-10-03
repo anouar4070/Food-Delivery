@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Poppins } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers/HeroUiProvider";
+import { Toaster } from "react-hot-toast";
 
 
 const poppins = Poppins({
@@ -25,6 +26,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${poppins.variable} ${inter.variable}`}>
         <Providers>{children}</Providers>
+        
       </body>
     </html>
   );
