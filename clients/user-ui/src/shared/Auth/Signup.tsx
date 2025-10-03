@@ -1,60 +1,81 @@
+"use client";
 import styles from "@/src/utils/style";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { z } from "zod";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   AiFillGithub,
   AiOutlineEye,
   AiOutlineEyeInvisible,
 } from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
-import { z } from "zod";
+import { useState } from "react";
+import { useMutation } from "@apollo/client/react";
+import toast from "react-hot-toast";
+
+import { REGISTER_USER } from "@/src/graphql/actions/register.action";
 
 const formSchema = z.object({
+  name: z.string().min(3, "Name must be at least 3 characters long!"),
   email: z.email(),
   password: z.string().min(8, "Password must be at least 8characters long!"),
+  phone_number: z
+    .number()
+    .min(11, "Phone number must be at least 11 characters!"),
 });
 
-type LoginSchema = z.infer<typeof formSchema>;
+type SignUpSchema = z.infer<typeof formSchema>;
 
-const Login = ({ setActiveState }: { setActiveState: (e: string) => void }) => {
+const Signup = ({
+  setActiveState,
+}: {
+  setActiveState: (e: string) => void;
+}) => {
+  const [registerUserMutation, { loading }] =
+    useMutation(REGISTER_USER);
+
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
-  } = useForm<LoginSchema>({
+  } = useForm<SignUpSchema>({
     resolver: zodResolver(formSchema),
   });
-
   const [show, setShow] = useState(false);
 
-  const onSubmit = async (data: LoginSchema) => {
+  const onSubmit = async (data: SignUpSchema) => {
     console.log(data);
     reset();
-    // const loginData = {
-    //   email: data.email,
-    //   password: data.password,
-    // };
-    // const response = await Login({
-    //   variables: loginData,
-    // });
-    // if (response.data.Login.user) {
-    //   toast.success("Login Successful!");
-    //   Cookies.set("refresh_token", response.data.Login.refreshToken);
-    //   Cookies.set("access_token", response.data.Login.accessToken);
-    //   setOpen(false);
-    //   reset();
-    //   window.location.reload();
-    // } else {
-    //   toast.error(response.data.Login.error.message);
-    // }
+    try {
+      const response = await registerUserMutation({
+        variables: data,
+      });
+      localStorage.setItem(
+        "activation_token",
+        response.data.register.activation_token
+      );
+      toast.success("Please check your email to activate your account!");
+      reset();
+      //   setActiveState("Verification");
+    } catch (error: any) {
+      toast.error(error.message);
+    }
   };
 
   return (
     <div>
-      <h1 className={`${styles.title}`}>Login with Anouar</h1>
+      <h1 className={`${styles.title}`}>SignUp with Anouar web site</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="w-full relative mb-3">
+          <label className={`${styles.label}`}>Enter your Name</label>
+          <input
+            {...register("name")}
+            type="text"
+            placeholder="johndoe**"
+            className={`${styles.input}`}
+          />
+        </div>
         <label className={`${styles.label}`}>Enter your Email</label>
         <input
           {...register("email")}
@@ -67,7 +88,20 @@ const Login = ({ setActiveState }: { setActiveState: (e: string) => void }) => {
             {`${errors.email.message}`}
           </span>
         )}
-
+        <div className="w-full relative mt-3">
+          <label className={`${styles.label}`}>Enter your Phone Number</label>
+          <input
+            {...register("phone_number", { valueAsNumber: true })}
+            type="number"
+            placeholder="+216********"
+            className={`${styles.input}`}
+          />
+          {errors.phone_number && (
+            <span className="text-red-500 block mt-1">
+              {`${errors.phone_number.message}`}
+            </span>
+          )}
+        </div>
         <div className="w-full mt-5 relative mb-1">
           <label htmlFor="password" className={`${styles.label}`}>
             Enter your password
@@ -78,7 +112,6 @@ const Login = ({ setActiveState }: { setActiveState: (e: string) => void }) => {
             placeholder="password!@%"
             className={`${styles.input}`}
           />
-
           {!show ? (
             <AiOutlineEyeInvisible
               className="absolute bottom-3 right-2 z-1 cursor-pointer"
@@ -94,20 +127,13 @@ const Login = ({ setActiveState }: { setActiveState: (e: string) => void }) => {
           )}
         </div>
         {errors.password && (
-          <span className="text-red-500">{`${errors.password.message}`}</span>
+          <span className="text-red-500 mt-1">{`${errors.password.message}`}</span>
         )}
-
-        <div className="w-full mt-5">
-          <span
-            className={`${styles.label} text-[#2190ff] block text-right cursor-pointer`}
-            // onClick={() => setActiveState("Forgot-Password")}
-          >
-            Forgot your password?
-          </span>
+        <div className="w-full mt-1">
           <input
             type="submit"
-            value="login"
-            disabled={isSubmitting}
+            value="Sign Up"
+            disabled={isSubmitting || loading}
             className={`${styles.button} mt-3`}
           />
         </div>
@@ -120,12 +146,12 @@ const Login = ({ setActiveState }: { setActiveState: (e: string) => void }) => {
           <AiFillGithub size={30} className="cursor-pointer ml-2" />
         </div>
         <h5 className="text-center pt-4 font-Poppins text-[14px]">
-          Not have any account?
+          Already have an account?
           <span
             className="text-[#2190ff] pl-1 cursor-pointer"
-            onClick={() => setActiveState("Signup")}
+            onClick={() => setActiveState("Login")}
           >
-            Sign up
+            Login
           </span>
         </h5>
         <br />
@@ -134,4 +160,4 @@ const Login = ({ setActiveState }: { setActiveState: (e: string) => void }) => {
   );
 };
 
-export default Login;
+export default Signup;
