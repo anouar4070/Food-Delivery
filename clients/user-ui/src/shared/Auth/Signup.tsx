@@ -10,10 +10,10 @@ import {
 } from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
 import { useState } from "react";
-import { useMutation } from '@apollo/client/react';
+import { useMutation } from "@apollo/client/react";
+import toast from "react-hot-toast";
 
-//import { REGISTER_USER } from "@/src/graphql/actions/register.action";
-//import toast from "react-hot-toast";
+import { REGISTER_USER } from "@/src/graphql/actions/register.action";
 
 const formSchema = z.object({
   name: z.string().min(3, "Name must be at least 3 characters long!"),
@@ -31,7 +31,7 @@ const Signup = ({
 }: {
   setActiveState: (e: string) => void;
 }) => {
-  const [registerUserMutation, { loading, error, data }] =
+  const [registerUserMutation, { loading }] =
     useMutation(REGISTER_USER);
 
   const {
@@ -47,20 +47,20 @@ const Signup = ({
   const onSubmit = async (data: SignUpSchema) => {
     console.log(data);
     reset();
-    // try {
-    //   const response = await registerUserMutation({
-    //     variables: data,
-    //   });
-    //   localStorage.setItem(
-    //     "activation_token",
-    //     response.data.register.activation_token
-    //   );
-    //   toast.success("Please check your email to activate your account!");
-    //   reset();
-    //   setActiveState("Verification");
-    // } catch (error: any) {
-    //   toast.error(error.message);
-    // }
+    try {
+      const response = await registerUserMutation({
+        variables: data,
+      });
+      localStorage.setItem(
+        "activation_token",
+        response.data.register.activation_token
+      );
+      toast.success("Please check your email to activate your account!");
+      reset();
+      //   setActiveState("Verification");
+    } catch (error: any) {
+      toast.error(error.message);
+    }
   };
 
   return (
@@ -129,11 +129,11 @@ const Signup = ({
         {errors.password && (
           <span className="text-red-500 mt-1">{`${errors.password.message}`}</span>
         )}
-        <div className="w-full mt-5">
+        <div className="w-full mt-1">
           <input
             type="submit"
             value="Sign Up"
-            //disabled={isSubmitting || loading}
+            disabled={isSubmitting || loading}
             className={`${styles.button} mt-3`}
           />
         </div>

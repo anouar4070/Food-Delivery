@@ -26,7 +26,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${poppins.variable} ${inter.variable}`}>
         <Providers>{children}</Providers>
-        
+        <Toaster position="top-center" reverseOrder={false} />
       </body>
     </html>
   );
