@@ -18,7 +18,7 @@ import { REGISTER_USER } from "@/src/graphql/actions/register.action";
 const formSchema = z.object({
   name: z.string().min(3, "Name must be at least 3 characters long!"),
   email: z.email(),
-  password: z.string().min(8, "Password must be at least 8characters long!"),
+  password: z.string().min(8, "Password must be at least 8 characters long!"),
   phone_number: z
     .number()
     .min(11, "Phone number must be at least 11 characters!"),
@@ -26,13 +26,21 @@ const formSchema = z.object({
 
 type SignUpSchema = z.infer<typeof formSchema>;
 
+// ✅ Typage attendu de la mutation
+type RegisterUserResponse = {
+  register: {
+    activation_token: string;
+  };
+};
+
 const Signup = ({
   setActiveState,
 }: {
   setActiveState: (e: string) => void;
 }) => {
+  // ✅ Typage de la mutation
   const [registerUserMutation, { loading }] =
-    useMutation(REGISTER_USER);
+    useMutation<RegisterUserResponse>(REGISTER_USER);
 
   const {
     register,
@@ -42,24 +50,25 @@ const Signup = ({
   } = useForm<SignUpSchema>({
     resolver: zodResolver(formSchema),
   });
+
   const [show, setShow] = useState(false);
 
   const onSubmit = async (data: SignUpSchema) => {
-    console.log(data);
-    reset();
     try {
-      const response = await registerUserMutation({
-        variables: data,
-      });
-      localStorage.setItem(
-        "activation_token",
-        response.data.register.activation_token
-      );
-      toast.success("Please check your email to activate your account!");
-      reset();
-      //   setActiveState("Verification");
+      const response = await registerUserMutation({ variables: data });
+
+      // ✅ Vérification sécurisée que la mutation a renvoyé les données
+      const token = response.data?.register?.activation_token;
+      if (token) {
+        localStorage.setItem("activation_token", token);
+        toast.success("Please check your email to activate your account!");
+        reset(); // reset après toast
+        // setActiveState("Verification");
+      } else {
+        toast.error("No activation token returned from server.");
+      }
     } catch (error: any) {
-      toast.error(error.message);
+      toast.error(error.message || "Something went wrong!");
     }
   };
 
