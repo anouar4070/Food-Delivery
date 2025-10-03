@@ -63,7 +63,7 @@ const ProfileDropDown = () => {
               <p className="font-semibold">Signed in as</p>
               <p className="font-semibold">
                 {/* {data?.user ? data.user.email : user.email} */}
-                support@becodemy.com
+                anouar@code.com
               </p>
             </DropdownItem>
             <DropdownItem key="settings">My Profile</DropdownItem>

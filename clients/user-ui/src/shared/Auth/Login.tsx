@@ -2,7 +2,11 @@ import styles from "@/src/utils/style";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { AiFillGithub, AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import {
+  AiFillGithub,
+  AiOutlineEye,
+  AiOutlineEyeInvisible,
+} from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
 import { z } from "zod";
 
@@ -13,7 +17,7 @@ const formSchema = z.object({
 
 type LoginSchema = z.infer<typeof formSchema>;
 
-const Login = ({setActiveState}: {setActiveState: (e: string) => void}) => {
+const Login = ({ setActiveState }: { setActiveState: (e: string) => void }) => {
   const {
     register,
     handleSubmit,
@@ -74,9 +78,7 @@ const Login = ({setActiveState}: {setActiveState: (e: string) => void}) => {
             placeholder="password!@%"
             className={`${styles.input}`}
           />
-          {errors.password && (
-            <span className="text-red-500">{`${errors.password.message}`}</span>
-          )}
+
           {!show ? (
             <AiOutlineEyeInvisible
               className="absolute bottom-3 right-2 z-1 cursor-pointer"
@@ -91,6 +93,9 @@ const Login = ({setActiveState}: {setActiveState: (e: string) => void}) => {
             />
           )}
         </div>
+        {errors.password && (
+          <span className="text-red-500">{`${errors.password.message}`}</span>
+        )}
 
         <div className="w-full mt-5">
           <span
