@@ -63,7 +63,7 @@ const Signup = ({
         localStorage.setItem("activation_token", token);
         toast.success("Please check your email to activate your account!");
         reset(); // reset après toast
-        // setActiveState("Verification");
+        setActiveState("Verification");
       } else {
         toast.error("No activation token returned from server.");
       }
