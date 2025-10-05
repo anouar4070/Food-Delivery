@@ -22,7 +22,7 @@ const AuthScreen = ({ setOpen }: { setOpen: (e: boolean) => void }) => {
     >
       <div className="w-[500px] bg-slate-900 rounded shadow-sm p-3">
         {activeState === "Login" && (
-          <Login setActiveState={setActiveState} />
+          <Login setActiveState={setActiveState} setOpen={setOpen} />
         )}
         {activeState === "Signup" && <Signup setActiveState={setActiveState} />}
         {activeState === "Verification" && (
