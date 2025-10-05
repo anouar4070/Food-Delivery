@@ -2,7 +2,7 @@
 import { useState } from "react";
  import Login from "../shared/Auth/Login";
  import Signup from "../shared/Auth/Signup";
-// import Verification from "../shared/Auth/Verification";
+ import Verification from "../shared/Auth/Verification";
 // import ForgotPassword from "../shared/Auth/ForgotPassword";
 
 const AuthScreen = ({ setOpen }: { setOpen: (e: boolean) => void }) => {

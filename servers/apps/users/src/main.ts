@@ -14,9 +14,10 @@ async function bootstrap() {
   app.setBaseViewsDir(join(__dirname, '..', 'servers/email-templates'));
   app.setViewEngine('ejs');
 
-  // app.enableCors({
-  //   origin: '*',
-  // });
+  app.enableCors({
+    origin: ['http://localhost:3000', 'http://127.0.0.1:3000'],
+    credentials: true,
+  });
 
   await app.listen(process.env.port ?? 4001);
 }

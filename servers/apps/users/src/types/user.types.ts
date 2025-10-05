@@ -31,20 +31,20 @@ export class ActivationResponse {
 @ObjectType()
 export class LoginResponse {
   @Field(() => User, { nullable: true })
-  user?: User | any;
+  user?: User | null;
 
-  @Field({ nullable: true })
-  accessToken?: string;
+  @Field(() => String, { nullable: true }) // <-- explicit type
+  accessToken?: string | null;
 
-  @Field({ nullable: true })
-  refreshToken?: string;
+  @Field(() => String, { nullable: true }) // <-- explicit type
+  refreshToken?: string | null;
 
   @Field(() => ErrorType, { nullable: true })
-  error?: ErrorType;
+  error?: ErrorType | null;
 }
 
 @ObjectType()
-export class LogoutResposne {
+export class LogoutResponse {
   @Field()
   message?: string;
 }

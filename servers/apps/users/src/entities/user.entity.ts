@@ -36,11 +36,11 @@ export class User {
   @Field()
   role: string;
 
-  @Field({ nullable: true })
-  address: string;
+  @Field(() => String, { nullable: true })
+  address?: string | null;
 
-  @Field({ nullable: true })
-  phone_number: number;
+  @Field(() => Number, { nullable: true })
+  phone_number?: number | null;
 
   @Field()
   createdAt: Date;
