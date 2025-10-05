@@ -1,4 +1,4 @@
-import { Directive, Field, ObjectType } from '@nestjs/graphql';
+import { ObjectType, Field, Directive } from '@nestjs/graphql';
 
 @ObjectType()
 @Directive('@key(fields:"id")')
@@ -36,8 +36,8 @@ export class User {
   @Field()
   role: string;
 
-  // @Field({ nullable: true })
-  // address?: string;
+  @Field({ nullable: true })
+  address: string;
 
   @Field({ nullable: true })
   phone_number: number;
