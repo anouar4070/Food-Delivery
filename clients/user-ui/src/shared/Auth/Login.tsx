@@ -14,15 +14,50 @@ import { z } from "zod";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 
+// --- START: Type Definitions for GraphQL Response ---
+
+/** Defines the structure of the user object returned on successful login. */
+interface LoginUser {
+  id: string;
+  name: string;
+  email: string;
+  password?: string; // Should typically not be returned, but based on your GQL action, I include it as optional/string
+  address: string;
+  phone_number: string;
+}
+
+/** Defines the overall structure of the response from the 'LoginUser' mutation. */
+interface LoginResponse {
+  Login: {
+    user: LoginUser | null;
+    accessToken: string | null;
+    refreshToken: string | null;
+    error: {
+      message: string;
+    } | null;
+  };
+}
+
+// --- END: Type Definitions for GraphQL Response ---
+
 const formSchema = z.object({
-  email: z.email(),
-  password: z.string().min(8, "Password must be at least 8characters long!"),
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(8, "Password must be at least 8 characters long!"),
 });
 
 type LoginSchema = z.infer<typeof formSchema>;
 
-const Login = ({ setActiveState, setOpen }: { setActiveState: (e: string) => void, setOpen: (e:boolean) => void; }) => {
-  const [Login, { loading }] = useMutation(LOGIN_USER);
+const Login = ({
+  setActiveState,
+  setOpen,
+}: {
+  setActiveState: (e: string) => void;
+  setOpen: (e: boolean) => void;
+}) => {
+  // FIX: Apply LoginResponse as the type for the mutation data
+  const [Login, { loading }] = useMutation<LoginResponse, LoginSchema>(
+    LOGIN_USER
+  );
 
   const {
     register,
@@ -40,18 +75,33 @@ const Login = ({ setActiveState, setOpen }: { setActiveState: (e: string) => voi
       email: data.email,
       password: data.password,
     };
-    const response = await Login({
-      variables: loginData,
-    });
-    if (response.data.Login.user) {
-      toast.success("Login Successful!");
-      Cookies.set("refresh_token", response.data.Login.refreshToken);
-      Cookies.set("access_token", response.data.Login.accessToken);
-      setOpen(false);
-      reset();
-      window.location.reload();
-    } else {
-      toast.error(response.data.Login.error.message);
+
+    try {
+      // response.data is now correctly typed as LoginResponse | undefined
+      const response = await Login({
+        variables: loginData,
+      });
+
+      // Safely check for response data before accessing properties
+      if (response.data && response.data.Login.user) {
+        toast.success("Login Successful!");
+        // The properties are now known to exist on the object
+        Cookies.set("refresh_token", response.data.Login.refreshToken!);
+        Cookies.set("access_token", response.data.Login.accessToken!);
+        setOpen(false);
+        reset();
+        window.location.reload();
+      } else if (response.data && response.data.Login.error) {
+        // Handle GraphQL error message from the response payload
+        toast.error(response.data.Login.error.message);
+      } else {
+        // Fallback for unexpected response structure
+        toast.error("An unknown login error occurred.");
+      }
+    } catch (error) {
+      // Handle network errors or other exceptions
+      console.error("Login mutation failed:", error);
+      toast.error("Login failed. Check your network connection.");
     }
   };
 
