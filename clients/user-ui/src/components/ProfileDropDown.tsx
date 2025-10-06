@@ -9,38 +9,39 @@ import {
 import { useEffect, useState } from "react";
 import { CgProfile } from "react-icons/cg";
 import AuthScreen from "../screens/AuthScreen";
-// import useUser from "../hooks/useUser";
-// import toast from "react-hot-toast";
-// import Cookies from "js-cookie";
+import useUser from "../hooks/useUser";
+import toast from "react-hot-toast";
+ import Cookies from "js-cookie";
 // import { signOut, useSession } from "next-auth/react";
 //import { registerUser } from "../actions/register-user";
 
 const ProfileDropDown = () => {
   const [signedIn, setsignedIn] = useState(false);
   const [open, setOpen] = useState(false);
-  // const { user, loading } = useUser();
+  const { user, loading } = useUser();
+  console.log(user);
   // const { data } = useSession();
 
-  // useEffect(() => {
-  //   if (!loading) {
-  //     setsignedIn(!!user);
-  //   }
+   useEffect(() => {
+    if (!loading) {
+      setsignedIn(!!user);
+     }
   //   if (data?.user) {
   //     setsignedIn(true);
   //     addUser(data?.user);
   //   }
-  // }, [loading, user, open, data]);
+   }, [loading, user]); //open, data
 
-  // const logoutHandler = () => {
-  //   if (data?.user) {
-  //     signOut();
-  //   } else {
-  //     Cookies.remove("access_token");
-  //     Cookies.remove("refresh_token");
-  //     toast.success("Log out successful!");
-  //     window.location.reload();
-  //   }
-  // };
+  const logoutHandler = () => {
+    // if (data?.user) {
+    //   signOut();
+    // } else {
+      Cookies.remove("access_token");
+      Cookies.remove("refresh_token");
+      toast.success("Log out successful!");
+      window.location.reload();
+    //}
+  };
 
   // const addUser = async (user: any) => {
   //   await registerUser(user);
@@ -54,7 +55,8 @@ const ProfileDropDown = () => {
             <Avatar
               as="button"
               className="transition-transform"
-              src="https://avatars.githubusercontent.com/u/159817067?s=400&u=778e078cfa9c4066022ac84b5d13ff1cf07c3b1d&v=4"
+              // src="https://avatars.githubusercontent.com/u/159817067?s=400&u=778e078cfa9c4066022ac84b5d13ff1cf07c3b1d&v=4"
+              src={user?.avatar?.url}
               // src={data?.user ? data.user.image : user.image}
             />
           </DropdownTrigger>
@@ -63,7 +65,7 @@ const ProfileDropDown = () => {
               <p className="font-semibold">Signed in as</p>
               <p className="font-semibold">
                 {/* {data?.user ? data.user.email : user.email} */}
-                anouar@code.com
+                {user.email}
               </p>
             </DropdownItem>
             <DropdownItem key="settings">My Profile</DropdownItem>
@@ -74,7 +76,7 @@ const ProfileDropDown = () => {
             <DropdownItem
               key="logout"
               color="danger"
-              // onClick={() => logoutHandler()}
+             onClick={() => logoutHandler()}
             >
               Log Out
             </DropdownItem>
@@ -86,7 +88,7 @@ const ProfileDropDown = () => {
           onClick={() => setOpen(!open)}
         />
       )}
-       {open && <AuthScreen setOpen={setOpen} />}
+      {open && <AuthScreen setOpen={setOpen} />}
     </div>
   );
 };
