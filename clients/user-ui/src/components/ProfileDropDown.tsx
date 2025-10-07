@@ -13,7 +13,7 @@ import useUser from "../hooks/useUser";
 import toast from "react-hot-toast";
 import Cookies from "js-cookie";
 import { signOut, useSession } from "next-auth/react";
-//import { registerUser } from "../actions/register-user";
+import { registerUser } from "../actions/register-user";
 
 const ProfileDropDown = () => {
   const [signedIn, setsignedIn] = useState(false);
@@ -27,7 +27,7 @@ const ProfileDropDown = () => {
     }
     if (data?.user) {
       setsignedIn(true);
-      //addUser(data?.user);
+      addUser(data?.user);
     }
   }, [loading, user, open, data]);
 
@@ -72,7 +72,7 @@ const ProfileDropDown = () => {
             <DropdownItem
               key="logout"
               color="danger"
-              onClick={() => logoutHandler()}
+              onClick={() => signOut() || logoutHandler}
             >
               Log Out
             </DropdownItem>
